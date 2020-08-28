@@ -28,7 +28,7 @@ class Neural_Network(*args):
         #y is output, res is result given in data set
         #backprop uses gradient descent to update values in psedo
         #no need to create an entire copy of biases and weights
-        
+        return
         
     def update(self,y,res):
         #updates the values of weights and biases given a output
@@ -43,6 +43,4 @@ class Neural_Network(*args):
                 
             
             
-        
-               
         return
