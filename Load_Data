@@ -1,0 +1,46 @@
+import gzip
+import pickle
+
+def vector_inp(i):
+    #converts i into a vector with 1 in ith pos
+    #ex: vector_inp(2) gives array([[0],[0],[1],....]) transpose
+    r = np.zeroes((10,1))
+    r[i] = 1.0
+    return r
+    
+    
+def load_data(x):
+    #this function just loads the mnist data sends it over in the
+    #exact same form its stored
+    f = gzip.open('x', 'rb')
+    train_data, validation_data,test_data = pickle.load(f)
+    f.close()
+    return train_data, validation_data, test_data
+    
+
+    
+def convert_data(file_location):
+    #first we load raw data into the arrays
+    tr_data, val_data,test_data = load_data(file_location)
+    
+    #reshape 2d arrays into 1d arrays of 784*1 vectors
+    tr_inputs = [np.reshape(x , (784,1)) for x in tr_data[0]]
+    #reshape the results using vector_inp fucntion as results
+    #contain only 1 digit and its easier to work with vectors and matrices
+    tr_results = [vector_inp(y) for y in tr_data[1]]
+    
+    #finally, zip the data and result together into single array
+    training_data = zip(tr_inputs, tr_results)
+    
+    #do same for validation data
+    val_inputs = [np.reshape(x , (784,1)) for x in val_data[0]]
+    val_results = [vector_inp(y) for y in val_data[1]]
+    validation_data = zip(val_inputs, val_results)
+    
+    #do same for testing data
+    test_inputs = [np.reshape(x , (784,1)) for x in test_data[0]]
+    test_results = [vector_inp(y) for y in test_data[1]]
+    test_data = zip(test_inputs, test_results)
+    
+    #return all the datasets together
+    return (training_data, validation_data, test_data)
