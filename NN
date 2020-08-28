@@ -1,0 +1,48 @@
+#what are the inputs?
+class Neural_Network(*args):
+    def __init__(self,size):
+        #size represents the structure of NN
+        #first and last element are input and output layers
+        #rest are the hidden layers. 
+        #For our case, its 1 hidden layer only
+        self.batchsize = 10
+        self.size = size  #(784,n,10)
+        
+        #biases and weights are initialised using a normal distribution
+        self.biases = [np.random.randn(y,1) for y in size[1:]]
+        self.weights = [np.random.randn(x,y) for x,y in zip(size[:-1],size[1:])]
+        
+        #leanring rate
+        self.alpha = 1 
+        
+    def feedforward(self,inp):
+        #feedforward takes the input and simply calculates the final output
+        #the input is in a (784,1) vector
+        #output is a (10,1) vector
+        for w,b in zip(self.weights, self.biases):
+            inp = sigmoid(np.add(np.dot(w,inp), b))
+            
+        return inp
+    
+    def back_prop(self,y,res):
+        #y is output, res is result given in data set
+        #backprop uses gradient descent to update values in psedo
+        #no need to create an entire copy of biases and weights
+        
+        
+    def update(self,y,res):
+        #updates the values of weights and biases given a output
+        #and actual result
+        #to be used by back_prop
+        
+        cost_d = cost_d(y,res)
+        sig_d = sigmoid_d(y)
+        
+        for i in reversed(list(enumerate(self.size))):
+            for j,k in zip(self.weights(i),self.biases(i)):
+                
+            
+            
+        
+               
+        return
