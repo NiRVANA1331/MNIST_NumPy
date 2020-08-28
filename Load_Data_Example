@@ -1,0 +1,4 @@
+import Load_Data as LD
+
+if __name__ == '__main__':
+    tr_data, val_data, test_data = LD.convert_data(input("enter file location"))
