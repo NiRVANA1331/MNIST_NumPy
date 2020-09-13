@@ -1,51 +1,88 @@
-#what are the inputs?
-class Neural_Network(*args):
+class Neural_Network():
     def __init__(self,size):
-        #size represents the structure of NN
-        #first and last element are input and output layers
-        #rest are the hidden layers. 
-        #For our case, its 1 hidden layer only
+        #this neuralnet contains only one hidden layer, hence that is hardcodded
         self.batchsize = 10
         self.size = size  #(784,n,10)
-        
-        #biases and weights are initialised using a normal distribution
         self.biases = [np.random.randn(y,1) for y in size[1:]]
         self.weights = [np.random.randn(x,y) for x,y in zip(size[:-1],size[1:])]
-        
-        #leanring rate
-        self.alpha = 1 
+        self.alpha = 1 #leanring rate
         
     def feedforward(self,inp):
-        #feedforward takes the input and simply calculates the final output
-        #the input is in a (784,1) vector
-        #output is a (10,1) vector
         for w,b in zip(self.weights, self.biases):
             inp = sigmoid(np.add(np.dot(w,inp), b))
             
         return inp
     
-    def back_prop(self,y,res):
-        #y is output, res is result given in data set
-        #backprop uses gradient descent to update values in psedo
-        #no need to create an entire copy of biases and weights
-        g = 0.5*(y-res)**2
+    
+    '''felt it was easier to create a new set of weights and biases rather
+        than updating them in situ'''
+    def back_prop(self,x,res):
+        #x is input, res is result given
+        #these arrays contain the updates
+        n_biases = [np.zeros(b.shape) for b in self.biases]
+        n_weights = [np.zeros(w.shape) for w in self.weights]
         
-        for w,b in zip(self.weights, self.biases):
-            w = w - self.alpha*cost_d
-            b = b - self.alpha*cost_d
-        return
+        #arrays to store activations and outputs of each layer
+        activations = []
+        output = []
         
-    def update(self,y,res):
-        #updates the values of weights and biases given a output
-        #and actual result
-        #to be used by back_prop
-        
-        cost_d = cost_d(y,res)
-        sig_d = sigmoid_d(y)
-        
+        #forward pass to store activation values
+        for b, w in zip(self.biases, self.weights):
+            z = np.dot(w, x)+b
+            output.append(z)
+            z = self.sigmoid(z)
+            activations.append(z)
+            
+        #backward pass to calculate gradients
+        delta = self.cost_derivative(activations[-1], res) * sigmoid_prime(output[-1])
         for i in reversed(list(enumerate(self.size))):
-            for j,k in zip(self.weights(i),self.biases(i)):
+            nabla_b[-1+i] = delta
+            nabla_w[-(1+i)] = np.dot(delta, activations[-(2+i)].transpose())
+            delta = np.dot(self.weights[-(l+i)].transpose(), delta) * self.sigmoid_d(output[-(2+i)])
+        return n_biases,n_weights
+    
+    def update_mini_batch(self, mini_batch):
+        nabla_b = [np.zeros(b.shape) for b in self.biases]
+        nabla_w = [np.zeros(w.shape) for w in self.weights]
+        for x, y in mini_batch:
+            delta_nabla_b, delta_nabla_w = self.backprop(x, y)
+            nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
+            nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
+        self.weights = [w-(self.alpha/len(mini_batch))*nw
+                        for w, nw in zip(self.weights, nabla_w)]
+        self.biases = [b-(alpha/len(mini_batch))*nb
+                       for b, nb in zip(self.biases, nabla_b)]
                 
-            
-            
-        return
+        
+        
+    def masterfn(self,train_data,):
+        #just to take in data and do the stuff to the NN
+        random.shuffle(train_data)
+        mini_batches = [train_data[i]:train_data[i+self.batchsize] for i in range(0,len(train_data),self.batchsize)]
+        for mini_batch in mini_batches:
+            update_mini_batch(mini_batch)
+        
+    def evaluate(self, test_data):
+        #evaluate the NN by running it on test data
+        #returns ratio of no of correct results to total
+        test_results = [(np.argmax(self.feedforward(x)), y)
+                        for (x, y) in test_data]
+        return sum(int(x == y)/len(test_results) for (x, y) in test_results)
+    
+    #mathematical functions
+    #_d refers to differentiation
+
+    def sigmoid(x):
+        return 1.0/(1.0+np.exp(-x))
+
+
+    def sigmoid_d(x):
+        return np.exp(x)/(np.exp(x)+1.0)^2
+
+       
+    def cost(out,res):
+        return 
+
+    def cost_d(out,res):
+        return (out-res)
+    
