@@ -53,8 +53,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 no_of_different_labels = 10 #  i.e. 0, 1, 2, 3, ..., 9
-image_pixels = i28 *28
+image_pixels = 28 * 28
 
-train_data = np.loadtxt(data path)
+train_data = np.loadtxt(data path)# more factors are essential here as well
 test_data = np.loadtxt(data path) 
 
