@@ -44,3 +44,17 @@ def convert_data(file_location):
     
     #return all the datasets together
     return (training_data, validation_data, test_data)
+    
+    
+# this way we can also download the data using load text    
+    
+%matplotlib inline
+import numpy as np
+import matplotlib.pyplot as plt
+
+no_of_different_labels = 10 #  i.e. 0, 1, 2, 3, ..., 9
+image_pixels = i28 *28
+
+train_data = np.loadtxt(data path)
+test_data = np.loadtxt(data path) 
+
